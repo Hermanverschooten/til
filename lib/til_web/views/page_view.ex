@@ -12,6 +12,16 @@ defmodule TilWeb.PageView do
     Timex.format!(date, "%b %d,%Y", :strftime)
   end
 
+  def month(str) do
+    case Timex.parse(str, "%Y%m", :strftime) do
+      {:ok, date} ->
+        Timex.format!(date, "%b, %Y", :strftime)
+
+      {:error, _} ->
+        "Invalid date"
+    end
+  end
+
   def url(%{date: date, slug: slug}), do: "/til/#{date}/#{slug}"
 
   def markdown(content) do

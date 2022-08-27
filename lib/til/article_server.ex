@@ -44,6 +44,12 @@ defmodule Til.ArticleServer do
     {:reply, state.articles, state}
   end
 
+  def handle_call({:articles, :all}, _from, state) do
+    articles = Enum.filter(state.articles, & &1.live)
+
+    {:reply, articles, state}
+  end
+
   def handle_call({:articles, count}, _from, state) do
     articles =
       Enum.filter(state.articles, & &1.live)

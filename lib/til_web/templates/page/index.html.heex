@@ -8,7 +8,7 @@
         <p class="text-xl font-semibold text-gray-900"><%= article.title %></p>
         <div class="flex flex-row gap-2">
           <%= for tag <- article.tags do %>
-            <a href="#" class="py-0.5 text-blue-400 hover:text-blue-700 uppercase">
+            <a href={"/tags/#{tag}"} class="py-0.5 text-blue-400 hover:text-blue-700 uppercase">
               <%= tag %>
             </a>
           <% end %>

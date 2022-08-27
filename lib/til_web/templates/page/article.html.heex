@@ -1,4 +1,11 @@
-<article class="pt-10 w-full text-gray-900">
+<div class="flex flex-row gap-2">
+  <%= for tag <- @article.tags do %>
+    <a href={"/tags/#{tag}"} class="py-0.5 text-blue-400 hover:text-blue-700 uppercase">
+      <%= tag %>
+    </a>
+  <% end %>
+</div>
+<article class="pt-4 w-full text-gray-900">
   <%= raw(markdown(@article.content)) %>
 </article>
 <div class="mt-3 flex justify-between">

@@ -1,0 +1,20 @@
+<div class="mt-6 pt-10 grid gap-16 lg:grid-cols-2 lg:gap-x-5 lg:gap-y-12">
+  <%= for {tag,articles} <- @tagged do %>
+    <div>
+      <h2 class="border-b text-gray-900 uppercase"><%= tag %></h2>
+      <ul>
+        <%= for article <- articles do %>
+          <li class="p-2">
+            <a href={url(article)} class="text-gray-500 group flex gap-2">
+              <div class="whitespace-nowrap group-hover:text-gray-900">
+                <%= article.date %>
+              </div>
+
+              <div class="group-hover:text-gray-900"><%= article.title %></div>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+</div>

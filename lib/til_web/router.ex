@@ -18,6 +18,9 @@ defmodule TilWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/overview", PageController, :all
+    get "/tags", PageController, :tags
+    get "/tags/:tag", PageController, :tagged
     get "/reload", PageController, :reload
     get "/til/:date/:slug", PageController, :show
   end
