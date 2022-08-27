@@ -8,8 +8,8 @@ defmodule TilWeb.PageController do
   end
 
   def show(conn, %{"date" => date, "slug" => slug}) do
-    with {:ok, article} <- ArticleServer.find(date, slug) do
-      render(conn, "article.html", article: article)
+    with {:ok, %{prev: prev, current: article, next: next}} <- ArticleServer.find(date, slug) do
+      render(conn, "article.html", article: article, prev: prev, next: next)
     else
       {:error, :not_found} ->
         conn

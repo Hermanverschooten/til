@@ -58,8 +58,14 @@ defmodule Til.ArticleServer do
              %{date: ^date, slug: ^slug} -> true
              _ -> false
            end) do
-        nil -> {:error, :not_found}
-        art -> {:ok, art}
+        nil ->
+          {:error, :not_found}
+
+        current ->
+          idx = Enum.find_index(state.articles, fn art -> art == current end)
+          prev = if idx > 0, do: Enum.at(state.articles, idx - 1), else: nil
+          next = Enum.at(state.articles, idx + 1)
+          {:ok, %{prev: prev, current: current, next: next}}
       end
 
     {:reply, reply, state}

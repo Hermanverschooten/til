@@ -1,3 +1,55 @@
 <article class="pt-10 w-full text-gray-900">
   <%= raw(markdown(@article.content)) %>
 </article>
+<div class="mt-3 flex justify-between">
+  <%= if @prev do %>
+    <a
+      href={url(@prev)}
+      class="text-base font-semibold text-blue-400 hover:text-blue-700 flex items-center"
+      title={@prev.title}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="w-5 h-5"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M18 10a.75.75 0 01-.75.75H4.66l2.1 1.95a.75.75 0 11-1.02 1.1l-3.5-3.25a.75.75 0 010-1.1l3.5-3.25a.75.75 0 111.02 1.1l-2.1 1.95h12.59A.75.75 0 0118 10z"
+          clip-rule="evenodd"
+        />
+      </svg>
+
+      <span class="ml-1">Previous</span>
+    </a>
+  <% else %>
+    <div></div>
+  <% end %>
+  <a href="/" class="text-base font-semibold text-blue-400 hover:text-blue-700 flex items-center">
+    Home
+  </a>
+  <%= if @next do %>
+    <a
+      href={url(@next)}
+      class="text-base font-semibold text-blue-400 hover:text-blue-700 flex items-center"
+      title={@next.title}
+    >
+      <span class="mr-1">Next</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="w-5 h-5"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M2 10a.75.75 0 01.75-.75h12.59l-2.1-1.95a.75.75 0 111.02-1.1l3.5 3.25a.75.75 0 010 1.1l-3.5 3.25a.75.75 0 11-1.02-1.1l2.1-1.95H2.75A.75.75 0 012 10z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </a>
+  <% else %>
+    <div></div>
+  <% end %>
+</div>
