@@ -2,6 +2,18 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+.inline {
+    @apply inline-block border px-1 bg-gray-100/70;
+  }
+
+.makeup {
+  @apply block p-2 my-4 pl-4 min-w-max;
+}
+
+/* code.elixir { */
+/*   @apply border-yellow-400/30; */
+/* } */
+
 
 /* Alerts and form errors used by phx.new */
 .alert {

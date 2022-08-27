@@ -10,6 +10,8 @@ defmodule Til.Application do
     children = [
       # Start the Telemetry supervisor
       TilWeb.Telemetry,
+      # Start the article server
+      Til.ArticleServer,
       # Start the PubSub system
       {Phoenix.PubSub, name: Til.PubSub},
       # Start the Endpoint (http/https)

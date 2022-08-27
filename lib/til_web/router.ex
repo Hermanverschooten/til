@@ -18,6 +18,8 @@ defmodule TilWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/reload", PageController, :reload
+    get "/til/:date/:slug", PageController, :show
   end
 
   # Other scopes may use custom stacks.

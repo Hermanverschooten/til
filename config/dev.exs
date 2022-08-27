@@ -20,6 +20,8 @@ config :til, TilWeb.Endpoint,
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
   ]
 
+config :til, article_path: "articles"
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed
