@@ -9,7 +9,7 @@
             <div class="flex flex-row gap-2">
               <%= for tag <- article.tags do %>
                 <a
-                  href={"/tags/#{tag}"}
+                  href={Routes.page_path(@conn, :tagged, tag)}
                   class="py-0.5 text-xs text-blue-400 hover:text-blue-700 uppercase"
                 >
                   <%= tag %>

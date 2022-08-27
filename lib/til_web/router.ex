@@ -18,6 +18,7 @@ defmodule TilWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/sitemap.xml", SitemapController, :sitemap
     get "/overview", PageController, :all
     get "/tags", PageController, :tags
     get "/tags/:tag", PageController, :tagged

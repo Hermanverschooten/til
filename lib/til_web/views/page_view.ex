@@ -22,7 +22,7 @@ defmodule TilWeb.PageView do
     end
   end
 
-  def url(%{date: date, slug: slug}), do: "/til/#{date}/#{slug}"
+  def url(%{date: date, slug: slug}), do: Routes.page_path(TilWeb.Endpoint, :show, date, slug)
 
   def markdown(content) do
     Earmark.as_html!(content,
