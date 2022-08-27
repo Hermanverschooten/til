@@ -46,6 +46,18 @@ defmodule TilWeb.PageController do
     end
   end
 
+  def asset(conn, %{"date" => date, "name" => name}) do
+    with {:ok, filename} <- ArticleServer.asset(date, name) do
+      conn
+      |> send_download({:file, filename}, filename: Path.basename(filename))
+    else
+      {:error, :not_found} ->
+        conn
+        |> put_status(:not_found)
+        |> render(:"404")
+    end
+  end
+
   defp to_month(%{date: date}) do
     case Date.from_iso8601(date) do
       {:ok, d} ->

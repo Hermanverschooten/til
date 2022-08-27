@@ -22,6 +22,7 @@ defmodule TilWeb.Router do
     get "/tags", PageController, :tags
     get "/tags/:tag", PageController, :tagged
     get "/reload", PageController, :reload
+    get "/til/:date/assets/:name", PageController, :asset
     get "/til/:date/:slug", PageController, :show
   end
 

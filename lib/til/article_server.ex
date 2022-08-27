@@ -2,7 +2,7 @@ defmodule Til.ArticleServer do
   use GenServer
   alias Til.Article
 
-  defstruct articles: [], tags: []
+  defstruct articles: [], tags: [], assets: []
 
   def refresh() do
     GenServer.cast(__MODULE__, :refresh)
@@ -18,6 +18,10 @@ defmodule Til.ArticleServer do
 
   def find(date, slug) do
     GenServer.call(__MODULE__, {:find, date, slug})
+  end
+
+  def asset(date, name) do
+    GenServer.call(__MODULE__, {:asset, date, name})
   end
 
   def tags() do
@@ -81,12 +85,26 @@ defmodule Til.ArticleServer do
     {:reply, state.tags, state}
   end
 
+  def handle_call({:asset, date, name}, _from, state) do
+    reply =
+      case Enum.find(state.assets, fn
+             %{date: ^date, name: ^name} -> true
+             _ -> false
+           end) do
+        nil -> {:error, :not_found}
+        asset -> {:ok, Til.Asset.file_path(asset)}
+      end
+
+    {:reply, reply, state}
+  end
+
   defp load_articles() do
     articles = Article.read()
 
     %__MODULE__{
       articles: articles,
-      tags: Enum.flat_map(articles, & &1.tags) |> Enum.uniq() |> Enum.sort()
+      tags: Enum.flat_map(articles, & &1.tags) |> Enum.uniq() |> Enum.sort(),
+      assets: Til.Asset.build()
     }
   end
 end

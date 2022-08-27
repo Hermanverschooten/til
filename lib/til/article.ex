@@ -1,12 +1,8 @@
 defmodule Til.Article do
   defstruct slug: "", title: "", tldr: "", content: "", live: false, date: nil, tags: []
 
-  def list(_count) do
-    []
-  end
-
   def read() do
-    for date <- File.ls!(path()), name <- File.ls!(path(date)) do
+    for file <- Path.wildcard("#{path()}/**/*.md"), [_, date, name] = Path.split(file) do
       with {:ok, data} <- read_file(date, name) do
         parse_file(date, name, data)
       end
@@ -39,9 +35,9 @@ defmodule Til.Article do
     end)
   end
 
-  defp path(name) do
-    Path.join(path(), name)
-  end
+  # defp path(name) do
+  #   Path.join(path(), name)
+  # end
 
   defp path(), do: Application.get_env(:til, :article_path)
 end
