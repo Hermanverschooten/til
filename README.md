@@ -1,19 +1,40 @@
-# Til
+# TIL - Today I Learned
 
-To start your Phoenix server:
+A simple file-based BLOG engine.
+It was amusing and I learned somethings new
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+## How to add articles
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+* Make sure the path in the runtime config points to the correct location.
+* Add a dated folder, YYYY-MM-DD
+* Create an <article>.md file, see below for its structure
+* Add any assets in the same foler, images, downloads, ...
+* visit /reload, to refresh the article list.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## File structure
+The .md file MUST adhere to the following structure:
+```
+visible
+-- TITLE --
+Try an Image
+-- TAGS --
+elixir
+ecto
+-- TLDR --
+How do I show an image
+-- CONTENT --
+# How do I show an image?
+![logo](assets/logo.png|class=border p-2,style=width:200px)
 
-## Learn more
+[pdf](assets/document.pdf)
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+```
+The first line should contain only the word `visible` for the article to be live.
+The title is shown on the main page, in the overview and as the page title.
+Tags are 1 per line.
+TLDR is the summary that appears on the home page.
+CONTENT contains the article in markdown format, with support for elixir syntax highlighting.
+
+For images I have added the option to add extra attributes by appending a `|` to the url followed by the attributes seperated with a comma.
+_Caution_ If adding Tailwind classes, make sure they exist in your css-file. These changes to the image tag are made at runtime.
+
