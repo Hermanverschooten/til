@@ -10,6 +10,13 @@
   @apply block p-2 my-4 pl-4 min-w-max;
 }
 
+article a {
+  @apply underline italic;
+}
+article blockquote {
+  @apply pl-4 border-blue-200 border-l-4 leading-loose text-gray-700 italic; 
+}
+
 /* code.elixir { */
 /*   @apply border-yellow-400/30; */
 /* } */

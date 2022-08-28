@@ -25,7 +25,7 @@ defmodule TilWeb.LayoutView do
                 :operator => "#3399cc",
                 :operator_word => "#cdcd00",
                 :punctuation => "#fff",
-                :comment => "#000080",
+                :comment => "#c0c0c0",
                 :comment_special => "bold #cd0000",
                 :generic_deleted => "#cd0000",
                 :generic_emph => "italic",
