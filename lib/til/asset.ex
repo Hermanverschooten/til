@@ -6,7 +6,7 @@ defmodule Til.Asset do
       Path.wildcard("#{path()}/**/*.*")
       |> Enum.reject(fn file -> Path.extname(file) == ".md" end)
 
-    for file <- files, [_, date, name] = Path.split(file) do
+    for file <- files, [date, name] = Path.split(file) |> Enum.take(-2) do
       %__MODULE__{date: date, name: name}
     end
   end

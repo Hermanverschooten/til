@@ -2,7 +2,8 @@ defmodule Til.Article do
   defstruct slug: "", title: "", tldr: "", content: "", live: false, date: nil, tags: []
 
   def read() do
-    for file <- Path.wildcard("#{path()}/**/*.md"), [_, date, name] = Path.split(file) do
+    for file <- Path.wildcard("#{path()}/**/*.md"),
+        [date, name] = Path.split(file) |> Enum.take(-2) do
       with {:ok, data} <- read_file(date, name) do
         parse_file(date, name, data)
       end
