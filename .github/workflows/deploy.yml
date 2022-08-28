@@ -1,0 +1,109 @@
+name: Deploy to production
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  otp-version: 25.0.4
+  elixir-version: 1.13.4
+  node-version: 17.0.1
+
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    env:
+      MIX_ENV: prod
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install OTP and Elixir
+        uses: erlef/setup-elixir@v1
+        with:
+          otp-version: ${{ env.otp-version }}
+          elixir-version: ${{ env.elixir-version }}
+
+      - name: Cache mix deps
+        uses: actions/cache@v1
+        env:
+          cache-name: mix-deps-prod
+        with:
+          path: deps
+          key: ${{ runner.os }}-${{ env.otp-version }}-${{ env.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
+
+      - name: Cache build
+        uses: actions/cache@v1
+        env:
+          cache-name: mix-build-prod-v1
+        with:
+          path: _build
+          key: ${{ runner.os }}-${{ env.otp-version }}-${{ env.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
+
+      - run: mix deps.get --only prod
+      - run: mix deps.compile
+
+  deploy:
+    runs-on: ubuntu-22.04
+    needs: build
+
+    env:
+      MIX_ENV: prod
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install OTP and Elixir
+        uses: erlef/setup-elixir@v1
+        with:
+          otp-version: ${{ env.otp-version }}
+          elixir-version: ${{ env.elixir-version }}
+
+      - name: Cache mix deps
+        uses: actions/cache@v1
+        env:
+          cache-name: mix-deps-prod
+        with:
+          path: deps
+          key: ${{ runner.os }}-${{ env.otp-version }}-${{ env.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
+
+      - name: Cache build
+        uses: actions/cache@v1
+        env:
+          cache-name: mix-build-prod-v1
+        with:
+          path: _build
+          key: ${{ runner.os }}-${{ env.otp-version }}-${{ env.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
+
+      - run: mix compile
+      - run: mix assets.deploy
+      - run: mix release --overwrite
+      - run: tar -zcf til.tar.gz -C _build/prod/rel/til .
+
+      - name: WireGuard
+        uses: Hermanverschooten/wireguard@v0.0.01-alpha
+        with:
+          config: '${{ secrets.WIREGUARD }}'
+
+      - name: Publish
+        uses: nogsantos/scp-deploy@master
+        with:
+          src: ./til.tar.gz
+          host: '${{ secrets.DEPLOY_HOST }}'
+          remote: '${{ secrets.DEPLOY_LOCATION }}'
+          port:  '${{ secrets.DEPLOY_PORT }}'
+          user:  '${{ secrets.DEPLOY_USER }}'
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Remote SSH Commands
+        uses: fifsky/ssh-action@v0.0.4
+        with:
+          host: '${{ secrets.DEPLOY_HOST }}'
+          port:  '${{ secrets.DEPLOY_PORT }}'
+          user:  '${{ secrets.DEPLOY_USER }}'
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          command: ./deploy
+
