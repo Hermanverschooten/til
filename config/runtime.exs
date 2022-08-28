@@ -27,7 +27,15 @@ if config_env() == :prod do
       environment variable ARTICLE_PATH is missing.
       """
 
-  config :til, article_path: article_path
+  domains =
+    System.get_env("DOMAINS") ||
+      raise """
+      environment variable DOMAINS is missing.
+      """
+
+  config :til,
+    article_path: article_path,
+    domains: String.split(domains)
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
@@ -52,7 +60,18 @@ if config_env() == :prod do
       # See the documentation on https://hexdocs.pm/plug_cowboy/Plug.Cowboy.html
       # for details about using IPv6 vs IPv4 and loopback vs public addresses.
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
-      port: port
+      port: port,
+      transport_options: [socket_opts: [:inet6]],
+      compress: true
+    ],
+    https: [
+      transport_options: [socket_opts: [:inet6]],
+      compress: true,
+      port: 443,
+      cipher_suite: :strong,
+      secure_renegotiate: true,
+      reuse_sessions: true,
+      log_level: :warning
     ],
     secret_key_base: secret_key_base
 

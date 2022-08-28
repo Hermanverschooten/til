@@ -38,3 +38,6 @@ npm-debug.log
 
 # Test articles
 articles/
+
+# Temp map
+tmp

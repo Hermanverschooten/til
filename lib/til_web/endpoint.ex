@@ -1,5 +1,6 @@
 defmodule TilWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :til
+  use SiteEncrypt.Phoenix
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
@@ -46,4 +47,25 @@ defmodule TilWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
   plug TilWeb.Router
+
+  @impl SiteEncrypt
+  def certification do
+    SiteEncrypt.configure(
+      client: :native,
+      domains: Application.get_env(:til, :domains),
+      emails: ["Herman@verschooten.name"],
+      db_folder: System.get_env("SITE_ENCRYPT_DB", Path.join("tmp", "site_encrypt_db")),
+      directory_url:
+        case System.get_env("CERT_MODE", "local") do
+          "local" -> {:internal, port: 4103}
+          "staging" -> "https://acme-staging-v02.api.letsencrypt.org/directory"
+          "production" -> "https://acme-v02.api.letsencrypt.org/directory"
+        end
+    )
+  end
+
+  @impl Phoenix.Endpoint
+  def init(_key, config) do
+    {:ok, SiteEncrypt.Phoenix.configure_https(config)}
+  end
 end

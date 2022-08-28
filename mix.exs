@@ -50,7 +50,8 @@ defmodule Til.MixProject do
       {:timex, "~> 3.7"},
       {:earmark, "~> 1.4"},
       {:makeup, "~> 1.1"},
-      {:makeup_elixir, "~> 0.16"}
+      {:makeup_elixir, "~> 0.16"},
+      {:site_encrypt, "~> 0.4"}
     ]
   end
 
