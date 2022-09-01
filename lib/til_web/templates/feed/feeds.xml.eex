@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>TIL - Herman verschooten</title>
+    <link>https://til.verschooten.name</link>
+    <description>Things I Learned, that may come in handy in the future</description>
+    <pubDate><%= @published %></pubDate>
+    <language>en-us</language>
+    <image>
+      <title>TIL - Herman verschooten</title>
+      <link>https://til.verschooten.name</link>
+      <url>https://til.verschooten.name/images/logo.png</url>
+      <width>93</width>
+      <height>124</height>
+    </image>
+  <%= for article <- @articles do %>
+      <item>
+        <title><%= article.title %></title>
+        <pub><%= article.published %></pub>
+        <link><%= Routes.page_url(@conn, :show, article.date, article.slug) %></link>
+        <guid><%= Routes.page_url(@conn, :show, article.date, article.slug) %></guid>
+        <description><![CDATA[<%= article.tldr%>]]></description>
+        <author><%= article.author%></author>
+        <category><%= article.category %></category>
+      </item>
+  <% end %>
+  </channel>
+</rss>
