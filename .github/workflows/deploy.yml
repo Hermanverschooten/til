@@ -7,7 +7,7 @@ on:
 
 env:
   otp-version: 25.0.4
-  elixir-version: 1.13.4
+  elixir-version: 1.14.0
   node-version: 17.0.1
 
 

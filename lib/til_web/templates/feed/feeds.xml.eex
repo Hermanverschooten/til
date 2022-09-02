@@ -21,7 +21,7 @@
         <pubDate><%= article.published %></pubDate>
         <link><%= Routes.page_url(@conn, :show, article.date, article.slug) %></link>
         <guid><%= Routes.page_url(@conn, :show, article.date, article.slug) %></guid>
-        <description><![CDATA[<%= markdown(article.content) %><p><a href="<%= Routes.page_url(@conn, :show, article.date, article.slug) %>" >Read the full article</a></p>]]></description>
+        <description><![CDATA[<%= markdown(article.content) %>]]></description>
         <author><%= article.author%></author>
         <category><%= article.category %></category>
       </item>
