@@ -26,6 +26,6 @@ defmodule TilWeb.FeedController do
   defp format(date) do
     date
     |> Timex.to_datetime()
-    |> Timex.lformat!("{RFC822}", "Europe/Brussels")
+    |> Timex.lformat!("{RFC1123}", "Europe/Brussels")
   end
 end
