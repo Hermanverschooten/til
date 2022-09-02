@@ -20,6 +20,7 @@ defmodule TilWeb.Router do
     get "/", PageController, :index
     get "/sitemap.xml", SitemapController, :sitemap
     get "/feed", FeedController, :feeds
+    get "/feed.css", FeedController, :css
     get "/overview", PageController, :all
     get "/tags", PageController, :tags
     get "/tags/:tag", PageController, :tagged

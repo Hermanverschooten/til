@@ -10,7 +10,21 @@ defmodule TilWeb.FeedController do
     published = first_article_published(articles)
 
     conn
+    |> put_resp_content_type("application/rss+xml")
     |> render("feeds.xml", articles: articles, published: published)
+  end
+
+  def css(conn, _params) do
+    css =
+      [
+        File.read!(Application.app_dir(:til, "priv/static/assets/app.css")),
+        TilWeb.LayoutView.stylesheet()
+      ]
+      |> Enum.join("\n")
+
+    conn
+    |> put_resp_content_type("application/rss+xml")
+    |> send_download({:binary, css}, filename: "app.css")
   end
 
   defp first_article_published([%{published: pubDate} | _]), do: pubDate
