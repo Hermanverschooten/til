@@ -24,8 +24,8 @@ defmodule TilWeb.FeedController do
   end
 
   defp format(date) do
-    tz = Timex.timezone("Europe/Brussels", date)
-
-    Timex.format!(date, "%a, %d %b %Y %H:%M:%S #{tz.abbreviation}", :strftime)
+    date
+    |> Timex.to_datetime()
+    |> Timex.lformat!("{RFC822}", "Europe/Brussels")
   end
 end
