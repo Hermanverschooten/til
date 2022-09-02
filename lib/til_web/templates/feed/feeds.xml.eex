@@ -16,7 +16,7 @@
   <%= for article <- @articles do %>
       <item>
         <title><%= article.title %></title>
-        <pub><%= article.published %></pub>
+        <pubDate><%= article.published %></pubDate>
         <link><%= Routes.page_url(@conn, :show, article.date, article.slug) %></link>
         <guid><%= Routes.page_url(@conn, :show, article.date, article.slug) %></guid>
         <description><![CDATA[<%= article.tldr%>]]></description>
