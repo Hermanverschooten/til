@@ -45,7 +45,7 @@ defmodule Til.Article do
   end
 
   defp tldr(data) do
-    Regex.run(~r/-- TLDR --\n(.*)\n--/s, data, capture: :all_but_first)
+    Regex.run(~r/-- TLDR --\n(.*)\n^--/msU, data, capture: :all_but_first)
     |> to_str()
   end
 
@@ -60,7 +60,7 @@ defmodule Til.Article do
   end
 
   defp tags(data) do
-    Regex.run(~r/-- TAGS --\n([^--]*+)/, data, capture: :all_but_first)
+    Regex.run(~r/-- TAGS --\n(.*)^--/msU, data, capture: :all_but_first)
     |> case do
       nil ->
         []
