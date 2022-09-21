@@ -24,6 +24,10 @@ ul li {
   @apply list-disc;
 }
 
+pre {
+  @apply text-white;
+}
+
 /* code.elixir { */
 /*   @apply border-yellow-400/30; */
 /* } */
