@@ -32,8 +32,24 @@ defmodule Til.ArticleServer do
     GenServer.start_link(__MODULE__, options, name: __MODULE__)
   end
 
-  def init(_) do
-    {:ok, %__MODULE__{}, {:continue, :load_articles}}
+  if Mix.env() == :dev do
+    def init(_) do
+      article_path = Application.get_env(:til, :article_path)
+      {:ok, pid} = FileSystem.start_link(dirs: [article_path])
+      FileSystem.subscribe(pid)
+
+      {:ok, %__MODULE__{}, {:continue, :load_articles}}
+    end
+
+    def handle_info({:file_event, _watcher_pid, {_path, _events}}, _state) do
+      IO.inspect("File changed, reloading articles")
+      TilWeb.Endpoint.broadcast("phoenix:live_reload", "assets_change", %{asset_type: "heex"})
+      {:noreply, load_articles()}
+    end
+  else
+    def init(_) do
+      {:ok, %__MODULE__{}, {:continue, :load_articles}}
+    end
   end
 
   def handle_continue(:load_articles, _state) do

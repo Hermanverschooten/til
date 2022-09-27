@@ -37,7 +37,7 @@ npm-debug.log
 *.db-*
 
 # Test articles
-articles/
+articles
 
 # Temp map
 tmp
