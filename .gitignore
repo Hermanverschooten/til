@@ -41,3 +41,6 @@ articles
 
 # Temp map
 tmp
+
+# env
+.env

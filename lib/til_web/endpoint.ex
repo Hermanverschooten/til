@@ -57,7 +57,7 @@ defmodule TilWeb.Endpoint do
       db_folder: System.get_env("SITE_ENCRYPT_DB", Path.join("tmp", "site_encrypt_db")),
       directory_url:
         case System.get_env("CERT_MODE", "local") do
-          "local" -> {:internal, port: 4103}
+          "local" -> {:internal, port: Application.get_env(:til, :site_encrypt_port, 444)}
           "staging" -> "https://acme-staging-v02.api.letsencrypt.org/directory"
           "production" -> "https://acme-v02.api.letsencrypt.org/directory"
         end
