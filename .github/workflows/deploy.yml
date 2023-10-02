@@ -5,12 +5,6 @@ on:
     branches:
       - main
 
-env:
-  otp-version: 25.0.4
-  elixir-version: 1.14.0
-  node-version: 17.0.1
-
-
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -22,10 +16,11 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install OTP and Elixir
-        uses: erlef/setup-beam@v1.14
+        uses: erlef/setup-beam@v1.15.4
+        id: elixir
         with:
-          otp-version: ${{ env.otp-version }}
-          elixir-version: ${{ env.elixir-version }}
+          version-file: ".tool-versions"
+          version-type: strict
 
       - name: Cache mix deps
         uses: actions/cache@v3
@@ -33,7 +28,7 @@ jobs:
           cache-name: mix-deps-prod
         with:
           path: deps
-          key: ${{ runner.os }}-${{ env.otp-version }}-${{ env.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
+          key: ${{ runner.os }}-${{ steps.elixir.outputs.otp-version }}-${{ steps.elixir.outputs.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
 
       - name: Cache build
         uses: actions/cache@v3
@@ -41,7 +36,7 @@ jobs:
           cache-name: mix-build-prod-v1
         with:
           path: _build
-          key: ${{ runner.os }}-${{ env.otp-version }}-${{ env.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
+          key: ${{ runner.os }}-${{ steps.elixir.outputs.otp-version }}-${{ steps.elixir.outputs.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
 
       - run: mix deps.get --only prod
       - run: mix deps.compile
@@ -57,10 +52,11 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install OTP and Elixir
-        uses: erlef/setup-beam@v1.14
+        uses: erlef/setup-beam@v1.15.4
+        id: elixir
         with:
-          otp-version: ${{ env.otp-version }}
-          elixir-version: ${{ env.elixir-version }}
+          version-file: ".tool-versions"
+          version-type: strict
 
       - name: Cache mix deps
         uses: actions/cache@v3
@@ -68,7 +64,7 @@ jobs:
           cache-name: mix-deps-prod
         with:
           path: deps
-          key: ${{ runner.os }}-${{ env.otp-version }}-${{ env.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
+          key: ${{ runner.os }}-${{ steps.elixir.outputs.otp-version }}-${{ steps.elixir.outputs.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
 
       - name: Cache build
         uses: actions/cache@v3
@@ -76,7 +72,7 @@ jobs:
           cache-name: mix-build-prod-v1
         with:
           path: _build
-          key: ${{ runner.os }}-${{ env.otp-version }}-${{ env.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
+          key: ${{ runner.os }}-${{ steps.elixir.outputs.otp-version }}-${{ steps.elixir.outputs.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
 
       - run: mix compile
       - run: mix assets.deploy
@@ -89,21 +85,13 @@ jobs:
           config: '${{ secrets.WIREGUARD }}'
 
       - name: Publish
-        uses: nogsantos/scp-deploy@master
-        with:
-          src: ./til.tar.gz
-          host: '${{ secrets.DEPLOY_HOST }}'
-          remote: '${{ secrets.DEPLOY_LOCATION }}'
-          port:  '${{ secrets.DEPLOY_PORT }}'
-          user:  '${{ secrets.DEPLOY_USER }}'
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-
-      - name: Remote SSH Commands
-        uses: fifsky/ssh-action@v0.0.4
-        with:
-          host: '${{ secrets.DEPLOY_HOST }}'
-          port:  '${{ secrets.DEPLOY_PORT }}'
-          user:  '${{ secrets.DEPLOY_USER }}'
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-          command: ./deploy
+        uses: Hermanverschooten/ssh-copy-command-action@v1
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          SOURCE: "./til.tar.gz"
+          REMOTE_HOST: '${{ secrets.DEPLOY_HOST }}'
+          TARGET: '${{ secrets.DEPLOY_LOCATION }}'
+          REMOTE_PORT:  '${{ secrets.DEPLOY_PORT }}'
+          REMOTE_USER:  '${{ secrets.DEPLOY_USER }}'
+          CMD: "./deploy"
 
