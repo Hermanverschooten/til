@@ -15,7 +15,7 @@ defmodule Til.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Til.PubSub},
       # Start the Endpoint (http/https)
-      {SiteEncrypt.Phoenix, TilWeb.Endpoint}
+      TilWeb.Endpoint
       # Start a worker by calling: Til.Worker.start_link(arg)
       # {Til.Worker, arg}
     ]

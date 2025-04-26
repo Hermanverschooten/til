@@ -1,6 +1,5 @@
 defmodule TilWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :til
-  use SiteEncrypt.Phoenix
+  use SiteEncrypt.Phoenix.Endpoint, otp_app: :til
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
@@ -62,10 +61,5 @@ defmodule TilWeb.Endpoint do
           "production" -> "https://acme-v02.api.letsencrypt.org/directory"
         end
     )
-  end
-
-  @impl Phoenix.Endpoint
-  def init(_key, config) do
-    {:ok, SiteEncrypt.Phoenix.configure_https(config)}
   end
 end
