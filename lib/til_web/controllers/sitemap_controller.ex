@@ -7,18 +7,19 @@ defmodule TilWeb.SitemapController do
       ArticleServer.articles(:all)
       |> Enum.map(fn article ->
         %{
-          loc: Routes.page_url(conn, :show, article.date, article.slug),
+          loc: url(~p"/til/#{article.date}/#{article.slug}"),
           lastmod: article.date,
           changefreq: "monthly"
         }
       end)
 
     urlset = [
-      %{loc: Routes.page_url(conn, :index), lastmod: Date.utc_today(), changefreq: "always"}
+      %{loc: url(~p"/"), lastmod: Date.utc_today(), changefreq: "always"}
       | articles
     ]
 
     conn
-    |> render("sitemap.xml", urlset: urlset)
+    |> put_resp_content_type("application/xml")
+    |> send_resp(200, TilWeb.SitemapXML.sitemap(%{urlset: urlset}))
   end
 end

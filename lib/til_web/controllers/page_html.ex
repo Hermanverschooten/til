@@ -1,5 +1,7 @@
-defmodule TilWeb.PageView do
-  use TilWeb, :view
+defmodule TilWeb.PageHTML do
+  use TilWeb, :html
+
+  embed_templates "page_html/*"
 
   def date(str) when is_binary(str) do
     case Date.from_iso8601(str) do
@@ -9,20 +11,21 @@ defmodule TilWeb.PageView do
   end
 
   def date(date) do
-    Timex.format!(date, "%b %d,%Y", :strftime)
+    Calendar.strftime(date, "%b %d,%Y")
   end
 
   def month(str) do
-    case Timex.parse(str, "%Y%m", :strftime) do
-      {:ok, date} ->
-        Timex.format!(date, "%b, %Y", :strftime)
-
-      {:error, _} ->
-        "Invalid date"
+    with <<year::binary-size(4), month::binary-size(2)>> <- str,
+         {year, ""} <- Integer.parse(year),
+         {month, ""} <- Integer.parse(month),
+         {:ok, date} <- Date.new(year, month, 1) do
+      Calendar.strftime(date, "%b, %Y")
+    else
+      _ -> "Invalid date"
     end
   end
 
-  def url(%{date: date, slug: slug}), do: Routes.page_path(TilWeb.Endpoint, :show, date, slug)
+  def article_path(%{date: date, slug: slug}), do: ~p"/til/#{date}/#{slug}"
 
   def markdown(content) do
     Earmark.as_html!(content,

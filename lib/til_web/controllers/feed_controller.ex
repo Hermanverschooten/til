@@ -11,14 +11,14 @@ defmodule TilWeb.FeedController do
 
     conn
     |> put_resp_content_type("application/rss+xml")
-    |> render("feeds.xml", articles: articles, published: published)
+    |> send_resp(200, TilWeb.FeedXML.feeds(%{articles: articles, published: published}))
   end
 
   def css(conn, _params) do
     css =
       [
         File.read!(Application.app_dir(:til, "priv/static/assets/app.css")),
-        TilWeb.LayoutView.stylesheet()
+        TilWeb.Layouts.stylesheet()
       ]
       |> Enum.join("\n")
 
@@ -39,7 +39,7 @@ defmodule TilWeb.FeedController do
 
   defp format(date) do
     date
-    |> Timex.to_datetime()
-    |> Timex.lformat!("{RFC1123}", "Europe/Brussels")
+    |> DateTime.new!(~T[00:00:00])
+    |> Calendar.strftime("%a, %d %b %Y %H:%M:%S %z")
   end
 end

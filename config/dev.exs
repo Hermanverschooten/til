@@ -58,8 +58,7 @@ config :til, TilWeb.Endpoint,
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/til_web/(live|views)/.*(ex)$",
-      ~r"lib/til_web/templates/.*(eex)$"
+      ~r"lib/til_web/(controllers|components|live)/.*(ex|heex|eex)$"
     ]
   ]
 

@@ -1,7 +1,9 @@
-defmodule TilWeb.LayoutView do
-  use TilWeb, :view
+defmodule TilWeb.Layouts do
+  use TilWeb, :html
 
   alias Makeup.Styles.HTML.Style
+
+  embed_templates "layouts/*"
 
   @jr_style Style.make_style(
               short_name: "Jr",
@@ -43,8 +45,4 @@ defmodule TilWeb.LayoutView do
   def stylesheet() do
     Style.stylesheet(@jr_style, "makeup")
   end
-
-  # Phoenix LiveDashboard is available only in development by default,
-  # so we instruct Elixir to not warn if the dashboard route is missing.
-  @compile {:no_warn_undefined, {Routes, :live_dashboard_path, 2}}
 end
