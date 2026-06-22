@@ -19,20 +19,19 @@ defmodule TilWeb.ConnCase do
 
   using do
     quote do
+      # The default endpoint for testing
+      @endpoint TilWeb.Endpoint
+
+      use TilWeb, :verified_routes
+
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
       import TilWeb.ConnCase
-
-      alias TilWeb.Router.Helpers, as: Routes
-
-      # The default endpoint for testing
-      @endpoint TilWeb.Endpoint
     end
   end
 
-  setup tags do
-    Til.DataCase.setup_sandbox(tags)
+  setup _tags do
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end

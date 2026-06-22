@@ -10,7 +10,11 @@ import Config
 # Configures the endpoint
 config :til, TilWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: TilWeb.ErrorView, accepts: ~w(html json), layout: false],
+  adapter: Bandit.PhoenixAdapter,
+  render_errors: [
+    formats: [html: TilWeb.ErrorHTML, json: TilWeb.ErrorJSON],
+    layout: false
+  ],
   pubsub_server: Til.PubSub,
   live_view: [signing_salt: "KhfqbFFu"]
 
@@ -28,7 +32,7 @@ config :swoosh, :api_client, false
 
 # Configure esbuild (the version is required)
 config :esbuild,
-  version: "0.14.29",
+  version: "0.25.5",
   default: [
     args:
       ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
@@ -37,7 +41,7 @@ config :esbuild,
   ]
 
 config :tailwind,
-  version: "3.1.8",
+  version: "3.4.17",
   default: [
     args: ~w(
       --config=tailwind.config.js

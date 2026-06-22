@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/css" href="<%= Routes.feed_url(@conn, :css)%>" ?>
+<?xml-stylesheet type="text/css" href="<%= url(~p"/feed.css") %>" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>TIL - Herman verschooten</title>
@@ -7,7 +7,7 @@
     <description>Things I Learned, that may come in handy in the future</description>
     <pubDate><%= @published %></pubDate>
     <language>en-us</language>
-    <atom:link href="<%= Routes.feed_url(TilWeb.Endpoint, :feeds) %>" rel="self" type="application/rss+xml" />
+    <atom:link href="<%= url(~p"/feed") %>" rel="self" type="application/rss+xml" />
     <image>
       <title>TIL - Herman verschooten</title>
       <link>https://til.verschooten.name</link>
@@ -19,10 +19,10 @@
       <item>
         <title><%= article.title %></title>
         <pubDate><%= article.published %></pubDate>
-        <link><%= Routes.page_url(@conn, :show, article.date, article.slug) %></link>
-        <guid><%= Routes.page_url(@conn, :show, article.date, article.slug) %></guid>
+        <link><%= url(~p"/til/#{article.date}/#{article.slug}") %></link>
+        <guid><%= url(~p"/til/#{article.date}/#{article.slug}") %></guid>
         <description><![CDATA[<%= markdown(article.content) %>]]></description>
-        <author><%= article.author%></author>
+        <author><%= article.author %></author>
         <category><%= article.category %></category>
       </item>
   <% end %>

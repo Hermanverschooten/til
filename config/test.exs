@@ -7,13 +7,13 @@ config :til, TilWeb.Endpoint,
   secret_key_base: "lk2nAQoKXLdbwV44Kktizd16eklQl/yEfGUevCtnFoxO4EB01K4o74356kc9LyyB",
   server: false
 
-config :til, article_path: "tmp/articles"
+config :til, article_path: "tmp/articles", domains: ["localhost"]
 
 # In test we don't send emails.
 config :til, Til.Mailer, adapter: Swoosh.Adapters.Test
 
 # Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime

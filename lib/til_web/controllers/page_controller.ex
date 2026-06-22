@@ -4,7 +4,7 @@ defmodule TilWeb.PageController do
 
   def index(conn, _params) do
     articles = ArticleServer.articles(4)
-    render(conn, "index.html", articles: articles)
+    render(conn, :index, articles: articles)
   end
 
   def all(conn, _params) do
@@ -13,7 +13,7 @@ defmodule TilWeb.PageController do
       |> Enum.group_by(&to_month/1)
       |> Enum.reverse()
 
-    render(conn, "all.html", articles: articles)
+    render(conn, :all, articles: articles)
   end
 
   def tags(conn, _params) do
@@ -27,7 +27,7 @@ defmodule TilWeb.PageController do
         {tag, list}
       end
 
-    render(conn, "tags.html", tagged: result)
+    render(conn, :tags, tagged: result)
   end
 
   def tagged(conn, %{"tag" => tag}) do
@@ -37,12 +37,12 @@ defmodule TilWeb.PageController do
       list = Enum.filter(articles, &Enum.member?(&1.tags, tag))
       result = [{tag, list}]
 
-      render(conn, "tags.html", tagged: result)
+      render(conn, :tags, tagged: result)
     else
       false ->
         conn
         |> put_status(:not_found)
-        |> render(:"404")
+        |> render(:not_found)
     end
   end
 
@@ -54,14 +54,14 @@ defmodule TilWeb.PageController do
       {:error, :not_found} ->
         conn
         |> put_status(:not_found)
-        |> render(:"404")
+        |> render(:not_found)
     end
   end
 
   defp to_month(%{date: date}) do
     case Date.from_iso8601(date) do
       {:ok, d} ->
-        Timex.format!(d, "%Y%m", :strftime)
+        Calendar.strftime(d, "%Y%m")
 
       _ ->
         "Before"
@@ -70,7 +70,7 @@ defmodule TilWeb.PageController do
 
   def show(conn, %{"date" => date, "slug" => slug}) do
     with {:ok, %{prev: prev, current: article, next: next}} <- ArticleServer.find(date, slug) do
-      render(conn, "article.html",
+      render(conn, :article,
         article: article,
         prev: prev,
         next: next,
@@ -80,7 +80,7 @@ defmodule TilWeb.PageController do
       {:error, :not_found} ->
         conn
         |> put_status(:not_found)
-        |> render(:"404")
+        |> render(:not_found)
     end
   end
 

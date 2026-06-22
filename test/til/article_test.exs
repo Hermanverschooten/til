@@ -21,13 +21,12 @@ defmodule Til.ArticleTest do
 
   """
 
-  setup_all do
-    File.mkdir_p("tmp/articles/2022-08-27")
+  setup do
+    File.rm_rf!("tmp/articles")
+    File.mkdir_p!("tmp/articles/2022-08-27")
     File.write!("tmp/articles/2022-08-27/transform-ecto-schema.md", @article)
 
-    on_exit(fn ->
-      File.rm_rf!("tmp/articles/*")
-    end)
+    on_exit(fn -> File.rm_rf!("tmp/articles") end)
   end
 
   test "reading the articles" do

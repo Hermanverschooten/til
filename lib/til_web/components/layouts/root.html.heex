@@ -6,21 +6,16 @@
     <link
       rel="alternate"
       type="application/rss+xml"
-      href={Routes.feed_url(@conn, :feeds)}
+      href={url(~p"/feed")}
       title="TIL - Herman verschooten"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="csrf-token" content={csrf_token_value()} />
+    <meta name="csrf-token" content={Phoenix.Controller.get_csrf_token()} />
     <Phoenix.Component.live_title>
-      <%= assigns[:page_title] || "Today I Learned" %>
+      {assigns[:page_title] || "Today I Learned"}
     </Phoenix.Component.live_title>
-    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")} />
-    <script
-      defer
-      phx-track-static
-      type="text/javascript"
-      src={Routes.static_path(@conn, "/assets/app.js")}
-    >
+    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
   </head>
   <body>
@@ -59,7 +54,7 @@
             </p>
           </div>
         </div>
-        <%= @inner_content %>
+        {@inner_content}
       </div>
     </div>
     <footer class="bg-white">

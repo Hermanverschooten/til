@@ -6,7 +6,7 @@ defmodule Til.Highlighter do
   """
   def highlight(html) do
     Regex.replace(
-      ~r/<pre><code(?:\s+class="(\w*)")?>([^<]*)<\/code><\/pre>/,
+      ~r/<pre><code(?: class="language-(\w+)")?>([^<]*)<\/code><\/pre>/,
       html,
       &highlight_code_block(&1, &2, &3)
     )
