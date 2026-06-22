@@ -48,7 +48,7 @@ defmodule Til.MixProject do
       {:jason, "~> 1.2"},
       {:bandit, "~> 1.5"},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
-      {:earmark, "~> 1.4"},
+      {:mdex, "~> 0.13"},
       {:makeup, "~> 1.1"},
       {:makeup_elixir, "~> 1.0"},
       {:site_encrypt, "~> 0.7"}

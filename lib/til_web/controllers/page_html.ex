@@ -28,12 +28,13 @@ defmodule TilWeb.PageHTML do
   def article_path(%{date: date, slug: slug}), do: ~p"/til/#{date}/#{slug}"
 
   def markdown(content) do
-    Earmark.as_html!(content,
-      compact_output: false,
-      smartypants: false,
-      breaks: true,
-      registered_processors: [{"img", &postprocess_image/1}]
+    content
+    |> MDEx.to_html!(
+      extension: [table: true, autolink: true, strikethrough: true, tasklist: true],
+      parse: [smart: false],
+      render: [hardbreaks: true, unsafe: true]
     )
+    |> postprocess_images()
     |> Til.Highlighter.highlight()
     |> highlight_html()
   end
@@ -51,28 +52,25 @@ defmodule TilWeb.PageHTML do
     end)
   end
 
-  def postprocess_image(node) do
-    case Regex.run(~r{(.*)\|(.*)}, Earmark.AstTools.find_att_in_node(node, "src", ""),
-           capture: :all_but_first
-         ) do
-      [url, extras] ->
-        {tag, attrs, extra1, extra2} = node
+  # Supports the custom `![alt](url|key=value,key=value)` image syntax: MDEx
+  # url-encodes the pipe to `%7C`, so split the rendered <img> src on it and
+  # promote the comma-separated key=value pairs to attributes.
+  defp postprocess_images(html) do
+    Regex.replace(~r/<img src="([^"]*?)%7[Cc]([^"]*?)"([^>]*?)\s*\/?>/, html, fn _full,
+                                                                                 url,
+                                                                                 extras,
+                                                                                 rest ->
+      attrs =
+        extras
+        |> String.split(",")
+        |> Enum.map_join(" ", fn pair ->
+          case String.split(pair, "=", parts: 2) do
+            [key, value] -> ~s(#{key}="#{value}")
+            [key] -> key
+          end
+        end)
 
-        attrs = Enum.reject(attrs, fn {key, _val} -> key == "src" end)
-
-        node = {tag, attrs, extra1, extra2}
-
-        attrs =
-          extras
-          |> String.split(",")
-          |> Enum.map(fn str -> String.split(str, "=", parts: 2) |> List.to_tuple() end)
-          |> Enum.into(%{})
-          |> Map.put("src", url)
-
-        Earmark.AstTools.merge_atts_in_node(node, attrs)
-
-      _ ->
-        node
-    end
+      ~s(<img src="#{url}" #{attrs}#{rest} />)
+    end)
   end
 end
