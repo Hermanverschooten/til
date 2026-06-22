@@ -13,17 +13,17 @@ jobs:
       MIX_ENV: prod
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Install OTP and Elixir
-        uses: erlef/setup-beam@v1.15.4
+        uses: erlef/setup-beam@v1.24.0
         id: elixir
         with:
           version-file: ".tool-versions"
           version-type: strict
 
       - name: Cache mix deps
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         env:
           cache-name: mix-deps-prod
         with:
@@ -31,7 +31,7 @@ jobs:
           key: ${{ runner.os }}-${{ steps.elixir.outputs.otp-version }}-${{ steps.elixir.outputs.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
 
       - name: Cache build
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         env:
           cache-name: mix-build-prod-v1
         with:
@@ -49,17 +49,17 @@ jobs:
       MIX_ENV: prod
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Install OTP and Elixir
-        uses: erlef/setup-beam@v1.15.4
+        uses: erlef/setup-beam@v1.24.0
         id: elixir
         with:
           version-file: ".tool-versions"
           version-type: strict
 
       - name: Cache mix deps
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         env:
           cache-name: mix-deps-prod
         with:
@@ -67,7 +67,7 @@ jobs:
           key: ${{ runner.os }}-${{ steps.elixir.outputs.otp-version }}-${{ steps.elixir.outputs.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
 
       - name: Cache build
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         env:
           cache-name: mix-build-prod-v1
         with:
