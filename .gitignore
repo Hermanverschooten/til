@@ -44,3 +44,6 @@ tmp
 
 # env
 .env
+
+# mise: tool versions are committed in mise.toml; local env/secrets are not
+mise.local.toml
