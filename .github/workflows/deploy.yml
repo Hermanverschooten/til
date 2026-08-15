@@ -19,7 +19,7 @@ jobs:
         uses: erlef/setup-beam@v1.24.0
         id: elixir
         with:
-          version-file: ".tool-versions"
+          version-file: "mise.toml"
           version-type: strict
 
       - name: Cache mix deps
@@ -55,7 +55,7 @@ jobs:
         uses: erlef/setup-beam@v1.24.0
         id: elixir
         with:
-          version-file: ".tool-versions"
+          version-file: "mise.toml"
           version-type: strict
 
       - name: Cache mix deps
