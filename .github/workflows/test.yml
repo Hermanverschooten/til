@@ -50,6 +50,9 @@ jobs:
           mix deps.get
           mix deps.clean --unused
 
+      - name: Build assets
+        run: mix tailwind default
+
       - name: Compile
         run: mix compile --warnings-as-errors
 
