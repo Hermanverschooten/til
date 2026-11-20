@@ -1,0 +1,60 @@
+name: Test
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+
+    env:
+      MIX_OS_DEPS_COMPILE_PARTITION_COUNT: 8
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Restore source mtimes
+        uses: chetan/git-restore-mtime-action@v2
+
+      - name: Install OTP and Elixir
+        uses: erlef/setup-beam@v1.24.0
+        id: elixir
+        with:
+          version-file: "mise.toml"
+          version-type: strict
+
+      - name: Cache mix deps
+        uses: actions/cache@v5
+        env:
+          cache-name: mix-deps-test
+        with:
+          path: deps
+          key: ${{ runner.os }}-${{ steps.elixir.outputs.otp-version }}-${{ steps.elixir.outputs.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}
+
+      - name: Cache build
+        uses: actions/cache@v5
+        env:
+          cache-name: mix-build-test-v1
+        with:
+          path: _build
+          key: ${{ runner.os }}-${{ steps.elixir.outputs.otp-version }}-${{ steps.elixir.outputs.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.elixir.outputs.otp-version }}-${{ steps.elixir.outputs.elixir-version }}-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock'))}}-
+            ${{ runner.os }}-${{ steps.elixir.outputs.otp-version }}-${{ steps.elixir.outputs.elixir-version }}-${{ env.cache-name }}-
+
+      - name: Install dependencies
+        run: |
+          mix deps.get
+          mix deps.clean --unused
+
+      - name: Build assets
+        run: mix tailwind default
+
+      - name: Compile
+        run: mix compile --warnings-as-errors
+
+      - name: Run tests
+        run: mix test
